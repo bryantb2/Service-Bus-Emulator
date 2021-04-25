@@ -14,7 +14,6 @@ namespace ServiceBus
             this.QueueId = GetEventIdAndIncrement();
         }
 
-
         // properties
         public int QueueId { get; set; }
 
@@ -26,7 +25,7 @@ namespace ServiceBus
             }
         }
 
-       
+        // operator overrides
         public BusEvent<T> this[int key]
         {
             get

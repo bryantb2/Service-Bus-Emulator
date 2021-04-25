@@ -5,44 +5,72 @@ namespace ServiceBus
 {
     public class Bus<T>
     {
-        private string name;
-        private List<BusEvent<T>> events;
-        private List<Worker<T>> workers;
-        private Dictionary<Worker<T>, List<IObservable<BusEvent<T>>>> queue;
+        // fields
+        private static int eventIdCounter = 0; 
+        private string name = "";
+        private List<EventQueue<T>> eventQueues = new List<EventQueue<T>>();
+
+        public Bus(string name)
+        {
+            this.name = name;
+            this.BusId = GetBusIdAndIncrement();
+        }
+
+        // static methods
+        public static int GetBusIdAndIncrement()
+        {
+            var currentId = eventIdCounter;
+            eventIdCounter++;
+            return currentId;
+        }
 
         // properties
+        public int BusId { get; set; }
+
         public string Name { 
             get  {
                 return this.name;
             }
         }
-        public List<BusEvent<T>> Events { 
-            get {
-                return this.events;
+
+        public List<EventQueue<T>> Queues
+        {
+            get
+            {
+                return this.eventQueues;
             }
         }
-        public List<Worker<T>> Workers { 
-            get {
-                return this.workers;
-            } 
-        }
 
-        public Bus(string name)
-        {
-            this.name = name;
-        }
-        
         // methods
-        public void PublishEvent(BusEvent<T> e)
+        public EventQueue<T> GetQueueById(int id)
         {
-            this.events.Add(e);
+            return this.eventQueues.Find(q => q.QueueId == id);
         }
 
-        public void RegisterWorker(Worker<T> worker)
+        public void AddQueue(EventQueue<T> queue)
         {
-            //var subscriber = 
-            //this.workers.Add(worker);
-            throw new NotImplementedException();
+            this.eventQueues.Add(queue);
+        }
+
+        public void RegisterQueue(EventQueue<T> queue)
+        {
+            this.eventQueues.Add(queue);
+        }
+
+        public bool RemoveQueue(EventQueue<T> queue)
+        {
+            var didRemove = this.eventQueues.Remove(queue);
+            return didRemove;
+        }
+
+        public EventQueue<T> RemoveQueueById(int id)
+        {
+            var qToRemove = this.eventQueues.Find(q => q.QueueId == id);
+            if (qToRemove != null)
+            {
+                this.eventQueues.Remove(qToRemove);
+            }
+            return qToRemove;
         }
     }
 }
