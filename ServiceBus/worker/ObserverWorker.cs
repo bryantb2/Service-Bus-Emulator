@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ServiceBus.worker
+namespace ServiceBus
 {
     public class ObserverWorker<T> : Worker<T>, IObserver<BusEvent<T>>
     {

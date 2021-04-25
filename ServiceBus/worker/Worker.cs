@@ -15,14 +15,14 @@ namespace ServiceBus
         // properties
         public int WorkerId { get; }
 
-        public Worker(Action<BusEvent<T>> processingAction, Action<BusEvent<T>> cleanupAction)
+        protected Worker(Action<BusEvent<T>> processingAction, Action<BusEvent<T>> cleanupAction)
         {
             this.processingAction = processingAction;
             this.cleanupAction = cleanupAction;
             this.WorkerId = GetWorkerIdAndIncrement();
         }
 
-        public Task<bool> ProcessEvent(BusEvent<T> evnt)
+        protected Task<bool> ProcessEvent(BusEvent<T> evnt)
         {
             try
             {
